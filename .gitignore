@@ -1,0 +1,82 @@
+# Expo
+.expo/
+dist/
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.pnpm-debug.*
+
+# macOS
+.DS_Store
+*.pem
+.AppleDouble
+.LSOverride
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
+*.log
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Dependency directories
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional REPL history
+.node_repl_history
+
+# Environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# iOS
+**/ios/.xcode.env.local
+
+.vscode/settings.json
