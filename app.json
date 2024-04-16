@@ -24,6 +24,27 @@
       },
       "package": "com.example.villagetreewalk"
     },
-    "plugins": []
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "assets/fonts/BarlowSemiCondensed-Thin.otf",
+            "assets/fonts/BarlowSemiCondensed-ExtraLight.otf",
+            "assets/fonts/BarlowSemiCondensed-Light.otf",
+            "assets/fonts/BarlowSemiCondensed-Regular.otf",
+            "assets/fonts/BarlowSemiCondensed-Medium.otf",
+            "assets/fonts/BarlowSemiCondensed-SemiBold.otf",
+            "assets/fonts/BarlowSemiCondensed-Bold.otf",
+            "assets/fonts/BarlowSemiCondensed-ExtraBold.otf",
+            "assets/fonts/BarlowSemiCondensed-Black.otf"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
