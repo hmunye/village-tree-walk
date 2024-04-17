@@ -1,11 +1,33 @@
+import treeMarker from "@/assets/images/tree_marker.webp";
 import colors from "@/styles/colors";
-import React from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import MapView from "react-native-maps";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Tree } from "@/types/types";
+import { useSQLiteContext } from "expo-sqlite/next";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, Platform, StyleSheet, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 export default function Map() {
-  const insets = useSafeAreaInsets();
+  const db = useSQLiteContext();
+  const [trees, setTrees] = useState<Tree[]>([]);
+  const markerRefs = useRef<any[]>([]);
+
+  const doRedraw = (index: number) => {
+    markerRefs.current[index].redraw();
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const rows = await db.getAllAsync("SELECT * FROM tree");
+        setTrees(rows as Tree[]);
+      } catch (error) {
+        // TODO: Better error handling
+        console.error(error);
+      }
+    }
+
+    fetchData();
+  }, [db]);
 
   return (
     <View style={styles.container}>
@@ -18,7 +40,29 @@ export default function Map() {
           longitudeDelta: 0.0421,
         }}
         customMapStyle={darkMapStyle}
-      />
+        showsCompass={false}
+        showsUserLocation={true}
+        showsMyLocationButton={false}
+      >
+        {trees.map((tree, index) => (
+          <Marker
+            ref={(ref) => (markerRefs.current[index] = ref)}
+            coordinate={{ latitude: tree.latitude, longitude: tree.longitude }}
+            tracksInfoWindowChanges={false}
+            tracksViewChanges={false}
+            key={tree.id}
+            title={tree.species}
+            description={tree.address}
+          >
+            <Image
+              source={treeMarker}
+              fadeDuration={0}
+              onLoad={() => doRedraw(index)}
+              style={{ width: 48, height: 48, resizeMode: "contain" }}
+            />
+          </Marker>
+        ))}
+      </MapView>
     </View>
   );
 }
