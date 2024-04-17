@@ -2,7 +2,7 @@ import colors from "@/styles/colors";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Map() {
+export default function Favorites() {
   return (
     <View style={styles.container}>
       <Text
@@ -12,7 +12,7 @@ export default function Map() {
           fontFamily: "Barlow-Medium",
         }}
       >
-        Map
+        Favorites
       </Text>
     </View>
   );
@@ -24,9 +24,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.background,
-  },
-  text: {
-    fontSize: 40,
-    fontFamily: "Barlow",
   },
 });

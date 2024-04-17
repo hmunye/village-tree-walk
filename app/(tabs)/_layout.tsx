@@ -1,32 +1,47 @@
-import colors from "@/utils/colors";
-import { Ionicons as IIcons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import colors from "@/styles/colors";
+import {
+  Entypo,
+  Ionicons as IIcons,
+  MaterialCommunityIcons as MCIcon,
+} from "@expo/vector-icons";
 import React from "react";
+import { AnimatedTabBarNavigator } from "react-native-animated-nav-tab-bar";
+import Map from ".";
+import Directory from "./directory";
+import Favorites from "./favorites";
+import Settings from "./settings";
 
 export default function TabLayout() {
+  const Tabs = AnimatedTabBarNavigator();
+
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.inactive,
-        tabBarStyle: {
-          backgroundColor: "#EEEEEE",
+    <Tabs.Navigator
+      tabBarOptions={{
+        activeTintColor: colors.background,
+        inactiveTintColor: colors.muted,
+        tabStyle: {
+          backgroundColor: colors.background,
           elevation: 0,
         },
-        tabBarLabelStyle: {
-          fontSize: 16,
-          fontFamily: "Barlow-Medium",
+        labelStyle: {
+          fontSize: 18,
+          fontFamily: "Barlow-Bold",
+          lineHeight: 20,
         },
+      }}
+      appearance={{
+        topPadding: 15,
+        horizontalPadding: 10,
+        bottomPadding: 15,
+        activeTabBackgrounds: colors.primary,
+        floating: true,
       }}
     >
       <Tabs.Screen
         name="index"
+        component={Map}
         options={{
           title: "Map",
-          headerTitleStyle: {
-            fontSize: 16,
-            fontFamily: "Barlow-Medium",
-          },
           tabBarIcon: ({
             focused,
             color,
@@ -36,20 +51,47 @@ export default function TabLayout() {
           }) => (
             <IIcons
               name={focused ? "map" : "map-outline"}
-              size={30}
               color={color}
+              size={28}
             />
           ),
         }}
       />
       <Tabs.Screen
+        name="favorites"
+        component={Favorites}
+        options={{
+          title: "Favorites",
+          tabBarIcon: ({
+            focused,
+            color,
+          }: {
+            focused: boolean;
+            color: string;
+          }) => (
+            <MCIcon
+              name={focused ? "heart-circle" : "heart-circle-outline"}
+              color={color}
+              size={28}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="directory"
+        component={Directory}
+        options={{
+          title: "Directory",
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Entypo name={"tree"} color={color} size={28} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="settings"
+        component={Settings}
         options={{
           title: "Settings",
-          headerTitleStyle: {
-            fontSize: 16,
-            fontFamily: "Barlow-Medium",
-          },
           tabBarIcon: ({
             focused,
             color,
@@ -59,12 +101,12 @@ export default function TabLayout() {
           }) => (
             <IIcons
               name={focused ? "settings" : "settings-outline"}
-              size={30}
               color={color}
+              size={28}
             />
           ),
         }}
       />
-    </Tabs>
+    </Tabs.Navigator>
   );
 }

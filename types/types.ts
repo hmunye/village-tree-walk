@@ -1,3 +1,14 @@
+type ColorValueHex = `#${string}`;
+
+export type ColorScheme = {
+  background: ColorValueHex;
+  foreground: ColorValueHex;
+  primary: ColorValueHex;
+  secondary: ColorValueHex;
+  destructive: ColorValueHex;
+  muted: ColorValueHex;
+};
+
 export type Tree = {
   id: number;
   latitude: number;
