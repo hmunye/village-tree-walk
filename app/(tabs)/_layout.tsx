@@ -20,8 +20,9 @@ export default function TabLayout() {
         activeTintColor: colors.background,
         inactiveTintColor: colors.muted,
         tabStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: "#F3EDE2",
           elevation: 0,
+          bottom: 15,
         },
         labelStyle: {
           fontSize: 18,

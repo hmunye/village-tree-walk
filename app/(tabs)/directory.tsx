@@ -1,4 +1,4 @@
-import TreeCard from "@/components/TreeCard";
+import TreeCard from "@/components/ui/TreeCard";
 import colors from "@/styles/colors";
 import { Tree } from "@/types/types";
 import { useSQLiteContext } from "expo-sqlite/next";
