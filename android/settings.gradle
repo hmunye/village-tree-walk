@@ -1,4 +1,4 @@
-rootProject.name = 'village-tree-walk'
+rootProject.name = 'Tree Walk'
 
 dependencyResolutionManagement {
   versionCatalogs {

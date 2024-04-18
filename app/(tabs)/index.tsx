@@ -1,25 +1,70 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
+import RouteCard from "@/components/ui/RouteCard";
 import colors from "@/styles/colors";
-import { Tree } from "@/types/types";
+import { darkMapStyle } from "@/styles/mapStyle";
+import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
+import { deviceHeight, deviceWidth } from "@/utils/deviceDimensions";
+import { FontAwesome } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useRef, useState } from "react";
-import { Image, Platform, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import {
+  FlatList,
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import MapView, { Marker, Polyline } from "react-native-maps";
+import Modal from "react-native-modal";
 
 export default function Map() {
   const db = useSQLiteContext();
   const [trees, setTrees] = useState<Tree[]>([]);
-  const markerRefs = useRef<any[]>([]);
+  const [routes, setRoutes] = useState<MapRoute[]>([]);
+  const [routeCords, setRouteCords] = useState<RouteCoordinates[]>([]);
 
+  const markerRefs = useRef<any[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [chooseTreeWalkVisible, setChooseTreeWalkVisible] = useState(true);
+
+  // Need this for marker performance on Android
   const doRedraw = (index: number) => {
     markerRefs.current[index].redraw();
+  };
+
+  const handleRouteSelect = async (routeId: number) => {
+    try {
+      const routeCordsRows = await db.getAllAsync(
+        "SELECT * FROM route_coordinates WHERE route_id = ?",
+        [routeId]
+      );
+      setRouteCords(routeCordsRows as RouteCoordinates[]);
+      setModalVisible(false);
+      setChooseTreeWalkVisible(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleStopRoute = () => {
+    setRouteCords([]);
+    setChooseTreeWalkVisible(true);
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
   };
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const rows = await db.getAllAsync("SELECT * FROM tree");
-        setTrees(rows as Tree[]);
+        const treeRows = await db.getAllAsync("SELECT * FROM tree");
+        const routeRows = await db.getAllAsync("SELECT * FROM map_route");
+
+        setTrees(treeRows as Tree[]);
+        setRoutes(routeRows as MapRoute[]);
       } catch (error) {
         // TODO: Better error handling
         console.error(error);
@@ -57,12 +102,89 @@ export default function Map() {
             <Image
               source={treeMarker}
               fadeDuration={0}
-              onLoad={() => doRedraw(index)}
+              onLoad={() =>
+                Platform.OS == "ios" ? undefined : doRedraw(index)
+              }
               style={{ width: 48, height: 48, resizeMode: "contain" }}
             />
           </Marker>
         ))}
+        {routeCords.length > 0 && (
+          <Polyline
+            coordinates={routeCords.map((item) => ({
+              latitude: item.latitude,
+              longitude: item.longitude,
+            }))}
+            strokeWidth={8}
+            strokeColor={colors.background}
+          />
+        )}
       </MapView>
+      {chooseTreeWalkVisible && (
+        <Pressable style={styles.button} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Choose Tree Walk</Text>
+        </Pressable>
+      )}
+      {!chooseTreeWalkVisible && (
+        <Pressable
+          style={[
+            styles.button,
+            !chooseTreeWalkVisible
+              ? { backgroundColor: colors.destructive }
+              : {},
+          ]}
+          onPress={handleStopRoute}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              !chooseTreeWalkVisible ? { color: colors.background } : {},
+            ]}
+          >
+            Stop Route
+          </Text>
+        </Pressable>
+      )}
+      <Modal
+        isVisible={modalVisible}
+        backdropOpacity={Platform.OS == "ios" ? 0.6 : 0.5}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        animationInTiming={400}
+        animationOutTiming={400}
+        backdropTransitionInTiming={0}
+        backdropTransitionOutTiming={0}
+        onBackdropPress={() => setModalVisible(false)}
+        statusBarTranslucent
+        deviceWidth={deviceWidth}
+        deviceHeight={deviceHeight + 100}
+        style={styles.modal}
+      >
+        <View style={styles.modalView}>
+          <Pressable onPress={toggleModal} style={styles.closeModal}>
+            <FontAwesome name="close" size={24} color={colors.foreground} />
+            <Text style={styles.selectText}>Select Route</Text>
+          </Pressable>
+
+          <FlatList
+            horizontal
+            initialNumToRender={3}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            alwaysBounceHorizontal
+            data={routes}
+            renderItem={({ item }) => (
+              <RouteCard item={item} onSelect={handleRouteSelect} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </View>
+        <View style={styles.swipeContainer}>
+          <FontAwesome name="arrow-left" size={24} color={colors.background} />
+          <Text style={styles.swipeText}>Swipe For More</Text>
+          <FontAwesome name="arrow-right" size={24} color={colors.background} />
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -72,244 +194,60 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.background,
   },
   map: {
     width: "100%",
     height: Platform.OS == "ios" ? "104%" : "100%",
   },
+  button: {
+    position: "absolute",
+    top: 80,
+    right: 20,
+    backgroundColor: colors.background,
+    padding: 15,
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontFamily: "Barlow-Bold",
+    color: colors.primary,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 0,
+  },
+  modalView: {
+    height: "62%",
+    width: "auto",
+    alignItems: "flex-start",
+    borderRadius: 20,
+    backgroundColor: colors.muted,
+  },
+  selectText: {
+    fontSize: 24,
+    fontFamily: "Barlow-Black",
+    color: colors.foreground,
+    marginLeft: 32,
+  },
+  closeModal: {
+    padding: 10,
+    paddingLeft: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    marginTop: 10,
+  },
+  swipeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  swipeText: {
+    fontSize: 24,
+    fontFamily: "Barlow-Bold",
+    margin: 15,
+    color: colors.background,
+  },
 });
-
-const darkMapStyle = [
-  {
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#1d2c4d",
-      },
-    ],
-  },
-  {
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#8ec3b9",
-      },
-    ],
-  },
-  {
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#1a3646",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.country",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#4b6878",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.land_parcel",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#64779e",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.province",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#4b6878",
-      },
-    ],
-  },
-  {
-    featureType: "landscape.man_made",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#334e87",
-      },
-    ],
-  },
-  {
-    featureType: "landscape.natural",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#023e58",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#283d6a",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#6f9ba5",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#1d2c4d",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#023e58",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#3C7680",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#304a7d",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#98a5be",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#1d2c4d",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#2c6675",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#255763",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#b0d5ce",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#023e58",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#98a5be",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#1d2c4d",
-      },
-    ],
-  },
-  {
-    featureType: "transit.line",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#283d6a",
-      },
-    ],
-  },
-  {
-    featureType: "transit.station",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#3a4762",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#0e1626",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#4e6d70",
-      },
-    ],
-  },
-];

@@ -15,6 +15,15 @@
 		96905EF65AED1B983A6B3ABC /* libPods-villagetreewalk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-villagetreewalk.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		BE1D7D74A23442988DE25738 /* BarlowSemiCondensed-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = F19B20F13E8A4E47A4EF581C /* BarlowSemiCondensed-Thin.otf */; };
+		5F68FB3867DB4A99B52BCE48 /* BarlowSemiCondensed-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 15EF043F13DE406D86DF7B86 /* BarlowSemiCondensed-ExtraLight.otf */; };
+		74A6E20E121C4FD8B88E09A1 /* BarlowSemiCondensed-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = E885935EE2BB4EAF940A7B31 /* BarlowSemiCondensed-Light.otf */; };
+		FF535F07CEA8426599E087B2 /* BarlowSemiCondensed-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = E3B3C3852FA04B20BFA3B9FB /* BarlowSemiCondensed-Regular.otf */; };
+		31D85F150D2E40BF8636744F /* BarlowSemiCondensed-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = FD06E463414642F29AC1E8F5 /* BarlowSemiCondensed-Medium.otf */; };
+		822B97D7736142F58DAE8A0E /* BarlowSemiCondensed-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2EE5EA55D6184612A05433A5 /* BarlowSemiCondensed-SemiBold.otf */; };
+		9E2B6F51079A41B682BE9791 /* BarlowSemiCondensed-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 08DEE5A3CC8449908CB2F1E8 /* BarlowSemiCondensed-Bold.otf */; };
+		196AA159C5154F75B656BCC5 /* BarlowSemiCondensed-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C9B13D23C6F54B449A1A0125 /* BarlowSemiCondensed-ExtraBold.otf */; };
+		ABFD5F8C234C4CBA8095E193 /* BarlowSemiCondensed-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = D7B94F85292A4FBCBE6CB85E /* BarlowSemiCondensed-Black.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +42,15 @@
 		D984CAC163C24A219D85B9E5 /* villagetreewalk-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "villagetreewalk-Bridging-Header.h"; path = "villagetreewalk/villagetreewalk-Bridging-Header.h"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-villagetreewalk/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		F19B20F13E8A4E47A4EF581C /* BarlowSemiCondensed-Thin.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-Thin.otf"; path = "../assets/fonts/BarlowSemiCondensed-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		15EF043F13DE406D86DF7B86 /* BarlowSemiCondensed-ExtraLight.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-ExtraLight.otf"; path = "../assets/fonts/BarlowSemiCondensed-ExtraLight.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E885935EE2BB4EAF940A7B31 /* BarlowSemiCondensed-Light.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-Light.otf"; path = "../assets/fonts/BarlowSemiCondensed-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E3B3C3852FA04B20BFA3B9FB /* BarlowSemiCondensed-Regular.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-Regular.otf"; path = "../assets/fonts/BarlowSemiCondensed-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FD06E463414642F29AC1E8F5 /* BarlowSemiCondensed-Medium.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-Medium.otf"; path = "../assets/fonts/BarlowSemiCondensed-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2EE5EA55D6184612A05433A5 /* BarlowSemiCondensed-SemiBold.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-SemiBold.otf"; path = "../assets/fonts/BarlowSemiCondensed-SemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		08DEE5A3CC8449908CB2F1E8 /* BarlowSemiCondensed-Bold.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-Bold.otf"; path = "../assets/fonts/BarlowSemiCondensed-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C9B13D23C6F54B449A1A0125 /* BarlowSemiCondensed-ExtraBold.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-ExtraBold.otf"; path = "../assets/fonts/BarlowSemiCondensed-ExtraBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D7B94F85292A4FBCBE6CB85E /* BarlowSemiCondensed-Black.otf */ = {isa = PBXFileReference; name = "BarlowSemiCondensed-Black.otf"; path = "../assets/fonts/BarlowSemiCondensed-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +106,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
+				9CE640B96D82444C8CFC7964 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -135,6 +154,23 @@
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
+		};
+		9CE640B96D82444C8CFC7964 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				F19B20F13E8A4E47A4EF581C /* BarlowSemiCondensed-Thin.otf */,
+				15EF043F13DE406D86DF7B86 /* BarlowSemiCondensed-ExtraLight.otf */,
+				E885935EE2BB4EAF940A7B31 /* BarlowSemiCondensed-Light.otf */,
+				E3B3C3852FA04B20BFA3B9FB /* BarlowSemiCondensed-Regular.otf */,
+				FD06E463414642F29AC1E8F5 /* BarlowSemiCondensed-Medium.otf */,
+				2EE5EA55D6184612A05433A5 /* BarlowSemiCondensed-SemiBold.otf */,
+				08DEE5A3CC8449908CB2F1E8 /* BarlowSemiCondensed-Bold.otf */,
+				C9B13D23C6F54B449A1A0125 /* BarlowSemiCondensed-ExtraBold.otf */,
+				D7B94F85292A4FBCBE6CB85E /* BarlowSemiCondensed-Black.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -200,6 +236,15 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				BE1D7D74A23442988DE25738 /* BarlowSemiCondensed-Thin.otf in Resources */,
+				5F68FB3867DB4A99B52BCE48 /* BarlowSemiCondensed-ExtraLight.otf in Resources */,
+				74A6E20E121C4FD8B88E09A1 /* BarlowSemiCondensed-Light.otf in Resources */,
+				FF535F07CEA8426599E087B2 /* BarlowSemiCondensed-Regular.otf in Resources */,
+				31D85F150D2E40BF8636744F /* BarlowSemiCondensed-Medium.otf in Resources */,
+				822B97D7736142F58DAE8A0E /* BarlowSemiCondensed-SemiBold.otf in Resources */,
+				9E2B6F51079A41B682BE9791 /* BarlowSemiCondensed-Bold.otf in Resources */,
+				196AA159C5154F75B656BCC5 /* BarlowSemiCondensed-ExtraBold.otf in Resources */,
+				ABFD5F8C234C4CBA8095E193 /* BarlowSemiCondensed-Black.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +386,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.villagetreewalk;
-				PRODUCT_NAME = villagetreewalk;
+				PRODUCT_NAME = "TreeWalk";
 				SWIFT_OBJC_BRIDGING_HEADER = "villagetreewalk/villagetreewalk-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -369,7 +414,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.villagetreewalk;
-				PRODUCT_NAME = villagetreewalk;
+				PRODUCT_NAME = "TreeWalk";
 				SWIFT_OBJC_BRIDGING_HEADER = "villagetreewalk/villagetreewalk-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

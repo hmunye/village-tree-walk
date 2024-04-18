@@ -28,7 +28,8 @@ export default function Directory() {
       <FlatList
         horizontal
         initialNumToRender={3}
-        indicatorStyle="black"
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         data={trees}
         renderItem={({ item }) => <TreeCard item={item} />}
         keyExtractor={(item) => item.id.toString()}

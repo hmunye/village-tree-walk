@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>village-tree-walk</string>
+    <string>Tree Walk</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -27,6 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>village-tree-walk</string>
           <string>com.example.villagetreewalk</string>
         </array>
       </dict>
@@ -42,6 +43,22 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSUserActivityTypes</key>
+    <array>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
+    </array>
+    <key>UIAppFonts</key>
+    <array>
+      <string>BarlowSemiCondensed-Thin.otf</string>
+      <string>BarlowSemiCondensed-ExtraLight.otf</string>
+      <string>BarlowSemiCondensed-Light.otf</string>
+      <string>BarlowSemiCondensed-Regular.otf</string>
+      <string>BarlowSemiCondensed-Medium.otf</string>
+      <string>BarlowSemiCondensed-SemiBold.otf</string>
+      <string>BarlowSemiCondensed-Bold.otf</string>
+      <string>BarlowSemiCondensed-ExtraBold.otf</string>
+      <string>BarlowSemiCondensed-Black.otf</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
@@ -65,7 +82,7 @@
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+    <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
   </dict>
