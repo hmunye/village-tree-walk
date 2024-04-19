@@ -1,9 +1,11 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
+import CustomPressable from "@/components/ui/CustomPressable";
 import RouteCard from "@/components/ui/RouteCard";
 import colors from "@/styles/colors";
 import { darkMapStyle } from "@/styles/mapStyle";
 import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
 import { deviceHeight, deviceWidth } from "@/utils/deviceDimensions";
+import redirectMap from "@/utils/redirectMap";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,7 +13,6 @@ import {
   FlatList,
   Image,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   View,
@@ -36,13 +37,19 @@ export default function Map() {
 
   const handleRouteSelect = async (routeId: number) => {
     try {
-      const routeCordsRows = await db.getAllAsync(
+      const routeCordsRows: RouteCoordinates[] = await db.getAllAsync(
         "SELECT * FROM route_coordinates WHERE route_id = ?",
         [routeId]
       );
-      setRouteCords(routeCordsRows as RouteCoordinates[]);
+      setRouteCords(routeCordsRows);
       setModalVisible(false);
       setChooseTreeWalkVisible(false);
+      // Redirect user to their maps application for directions to first tree on route
+      if (routeCordsRows && routeCordsRows.length > 0) {
+        redirectMap(routeCordsRows[0].latitude, routeCordsRows[0].longitude);
+      } else {
+        console.error("routeCords is undefined or empty");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -88,6 +95,10 @@ export default function Map() {
         showsCompass={false}
         showsUserLocation={true}
         showsMyLocationButton={false}
+        showsPointsOfInterest={false}
+        showsScale
+        toolbarEnabled={false}
+        userLocationCalloutEnabled
       >
         {trees.map((tree, index) => (
           <Marker
@@ -121,19 +132,22 @@ export default function Map() {
         )}
       </MapView>
       {chooseTreeWalkVisible && (
-        <Pressable style={styles.button} onPress={() => setModalVisible(true)}>
+        <CustomPressable
+          onPress={() => setModalVisible(true)}
+          buttonStyle={styles.button}
+        >
           <Text style={styles.buttonText}>Choose Tree Walk</Text>
-        </Pressable>
+        </CustomPressable>
       )}
       {!chooseTreeWalkVisible && (
-        <Pressable
-          style={[
+        <CustomPressable
+          onPress={handleStopRoute}
+          buttonStyle={[
             styles.button,
             !chooseTreeWalkVisible
               ? { backgroundColor: colors.destructive }
               : {},
           ]}
-          onPress={handleStopRoute}
         >
           <Text
             style={[
@@ -143,7 +157,7 @@ export default function Map() {
           >
             Stop Route
           </Text>
-        </Pressable>
+        </CustomPressable>
       )}
       <Modal
         isVisible={modalVisible}
@@ -161,10 +175,13 @@ export default function Map() {
         style={styles.modal}
       >
         <View style={styles.modalView}>
-          <Pressable onPress={toggleModal} style={styles.closeModal}>
+          <CustomPressable
+            onPress={toggleModal}
+            buttonStyle={styles.closeModal}
+          >
             <FontAwesome name="close" size={24} color={colors.foreground} />
             <Text style={styles.selectText}>Select Route</Text>
-          </Pressable>
+          </CustomPressable>
 
           <FlatList
             horizontal
@@ -219,9 +236,10 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   modalView: {
-    height: "62%",
+    height: "65%",
     width: "auto",
     alignItems: "flex-start",
+    justifyContent: "center",
     borderRadius: 20,
     backgroundColor: colors.muted,
   },

@@ -2,15 +2,10 @@ import colors from "@/styles/colors";
 import { MapRoute } from "@/types/types";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import CustomPressable from "./CustomPressable";
 
-/**
- * TODO: Change description to "Embark on a scenic tree walk starting from Brockport's Welcome Center at 11 Water Street.
- * Follow the canal westward to Main Street, where you'll encounter a picturesque route. Journey south on Holley Street,
- * surrounded by London Plane trees and flowering crabapples. Turn right onto Utica Street, then north to Clinton. Cross
- * the bridge via the sidewalk and descend onto Smith Street, leading you to Corbett Park amidst lush greenery."
- */
-
+// TODO: Update route description to be shorter
 export default function RouteCard({
   item,
   onSelect,
@@ -27,9 +22,12 @@ export default function RouteCard({
         </View>
         <Text style={styles.cardItemDescription}>{item.description}</Text>
         <View style={styles.buttonContainer}>
-          <Pressable style={styles.button} onPress={() => onSelect(item.id)}>
+          <CustomPressable
+            buttonStyle={styles.button}
+            onPress={() => onSelect(item.id)}
+          >
             <Text style={styles.buttonText}>Select</Text>
-          </Pressable>
+          </CustomPressable>
         </View>
       </View>
     </View>
@@ -46,7 +44,7 @@ const styles = StyleSheet.create({
   },
   cardBody: {
     width: "auto",
-    height: "auto",
+    height: "90%",
     borderRadius: 20,
     padding: 20,
     backgroundColor: "#EEEFFF",
@@ -65,8 +63,7 @@ const styles = StyleSheet.create({
     fontFamily: "Barlow-Black",
     color: colors.foreground,
     textAlign: "justify",
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     textTransform: "uppercase",
   },
   cardItemDescription: {
@@ -74,6 +71,7 @@ const styles = StyleSheet.create({
     fontFamily: "Barlow-Medium",
     color: colors.foreground,
     textAlign: "center",
+    marginTop: 10,
     marginBottom: 20,
   },
   buttonContainer: {

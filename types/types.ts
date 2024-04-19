@@ -1,3 +1,5 @@
+import { StyleProp, TextStyle, ViewStyle } from "react-native";
+
 type ColorValueHex = `#${string}`;
 
 export type ColorScheme = {
@@ -7,6 +9,13 @@ export type ColorScheme = {
   secondary: ColorValueHex;
   destructive: ColorValueHex;
   muted: ColorValueHex;
+};
+
+export type CustomButtonProps = {
+  onPress: () => void;
+  children?: React.ReactNode;
+  buttonStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 };
 
 export type Tree = {
