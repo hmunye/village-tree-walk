@@ -1,13 +1,15 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
 import CustomPressable from "@/components/ui/CustomPressable";
-import SelectRouteModal from "@/components/ui/SelectRouteModal";
+import SelectRoute from "@/components/ui/SelectRoute";
 import colors from "@/styles/colors";
 import { darkMapStyle } from "@/styles/mapStyle";
 import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
 import redirectMap from "@/utils/redirectMap";
+import * as Location from 'expo-location';
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   Platform,
   StyleSheet,
@@ -25,6 +27,7 @@ export default function Map() {
   const markerRefs = useRef<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [chooseTreeWalkVisible, setChooseTreeWalkVisible] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState<Location.LocationObject>();
 
   // Need this for marker performance on Android
   const doRedraw = (index: number) => {
@@ -77,19 +80,42 @@ export default function Map() {
     fetchData();
   }, [db]);
 
+useEffect(() => {
+  const getLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission to access location was denied');
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    setCurrentLocation(location);
+  };
+  getLocation();
+}, []);
+
+if (!currentLocation) {
+  return (
+    <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <ActivityIndicator size={"large"} color={colors.primary} style={{padding: 12, backgroundColor: "#F3EDE2", borderRadius: 12}}/>
+      <Text style={{marginTop: 15, fontFamily: "Barlow-Bold", fontSize: 20}}>Getting Location...</Text>
+    </View>
+  )
+}
+
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 43.213679182884576,
-          longitude: -77.9390734326327,
+          latitude: currentLocation?.coords.latitude ?? 43.213679182884576,
+          longitude: currentLocation?.coords.longitude ??-77.9390734326327,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
         customMapStyle={darkMapStyle}
         showsCompass={false}
         showsUserLocation={true}
+        followsUserLocation={false}
         showsMyLocationButton={false}
         showsPointsOfInterest={false}
         showsScale
@@ -155,7 +181,7 @@ export default function Map() {
           </Text>
         </CustomPressable>
       )}
-      <SelectRouteModal 
+      <SelectRoute
         modalVisible={modalVisible}
         setModalVisible={() => setModalVisible(false)}
         toggleModal={toggleModal}

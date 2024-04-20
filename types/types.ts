@@ -18,7 +18,7 @@ export type CustomButtonProps = {
   textStyle?: StyleProp<TextStyle>;
 };
 
-export type SelectRouteModalProps = {
+export type SelectRouteProps = {
   modalVisible: boolean,
   setModalVisible: (value: React.SetStateAction<boolean>) => void,
   toggleModal: () => void,

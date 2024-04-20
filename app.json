@@ -41,6 +41,13 @@
             "assets/fonts/BarlowSemiCondensed-Black.otf"
           ]
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+          "isAndroidForegroundServiceEnabled": true
+        }
       ]
     ],
     "experiments": {

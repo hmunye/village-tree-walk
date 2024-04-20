@@ -1,14 +1,14 @@
-import { StyleSheet, View, Text, FlatList, Platform } from 'react-native'
-import React from 'react'
 import colors from '@/styles/colors'
-import { deviceWidth, deviceHeight } from '@/utils/deviceDimensions'
+import { SelectRouteProps } from '@/types/types'
+import { deviceHeight, deviceWidth } from '@/utils/deviceDimensions'
 import { FontAwesome } from '@expo/vector-icons'
+import React from 'react'
+import { FlatList, Platform, StyleSheet, Text, View } from 'react-native'
+import Modal from "react-native-modal"
 import CustomPressable from './CustomPressable'
 import RouteCard from './RouteCard'
-import { SelectRouteModalProps } from '@/types/types'
-import Modal from "react-native-modal";
 
-export default function SelectRouteModal({modalVisible, setModalVisible, toggleModal, routes, handleRouteSelect}: SelectRouteModalProps) {
+export default function SelectRoute({modalVisible, setModalVisible, toggleModal, routes, handleRouteSelect}: SelectRouteProps) {
   return (
 	<Modal
         isVisible={modalVisible}
