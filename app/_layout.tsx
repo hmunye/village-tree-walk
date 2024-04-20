@@ -1,9 +1,10 @@
 import { openDatabase } from "@/utils/database";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +27,7 @@ export default function RootLayout() {
       await openDatabase()
         .then(() => setDbLoaded(true))
         // TODO: Better error handling
-        .catch((error) => console.log(error));
+        .catch((error) => console.error(error));
     }
     loadDb();
   }, []);
@@ -50,12 +51,14 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <SafeAreaProvider>
-      <SQLiteProvider databaseName="sqlite3.db">
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </SQLiteProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <SQLiteProvider databaseName="sqlite3.db">
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+        </SQLiteProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }

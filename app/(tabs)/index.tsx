@@ -1,12 +1,15 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
 import CustomPressable from "@/components/ui/CustomPressable";
 import SelectRoute from "@/components/ui/SelectRoute";
+import TreeProximity from "@/components/ui/TreeProximity";
 import colors from "@/styles/colors";
 import { darkMapStyle } from "@/styles/mapStyle";
 import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
 import redirectMap from "@/utils/redirectMap";
-import * as Location from 'expo-location';
+import { FontAwesome5 } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import { useSQLiteContext } from "expo-sqlite/next";
+import { getPreciseDistance } from "geolib";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -14,20 +17,28 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 export default function Map() {
   const db = useSQLiteContext();
   const [trees, setTrees] = useState<Tree[]>([]);
+  const [closestTree, setClosestTree] = useState<Tree | null>(null);
   const [routes, setRoutes] = useState<MapRoute[]>([]);
   const [routeCords, setRouteCords] = useState<RouteCoordinates[]>([]);
 
   const markerRefs = useRef<any[]>([]);
+  const mapRef = useRef<MapView>(null);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [chooseTreeWalkVisible, setChooseTreeWalkVisible] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState<Location.LocationObject>();
+  const [currentLocation, setCurrentLocation] =
+    useState<Location.LocationObjectCoords>();
+  const [markerCoordinates, setMarkerCoordinates] = useState({
+    latitude: 43.0936772,
+    longitude: -77.7845867,
+  });
 
   // Need this for marker performance on Android
   const doRedraw = (index: number) => {
@@ -63,6 +74,17 @@ export default function Map() {
     setModalVisible(!modalVisible);
   };
 
+  const animateToLocation = () => {
+    if (currentLocation && mapRef.current) {
+      mapRef.current.animateCamera({
+        center: {
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -80,35 +102,93 @@ export default function Map() {
     fetchData();
   }, [db]);
 
-useEffect(() => {
-  const getLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Permission to access location was denied');
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    setCurrentLocation(location);
-  };
-  getLocation();
-}, []);
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location.coords);
 
-if (!currentLocation) {
-  return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <ActivityIndicator size={"large"} color={colors.primary} style={{padding: 12, backgroundColor: "#F3EDE2", borderRadius: 12}}/>
-      <Text style={{marginTop: 15, fontFamily: "Barlow-Bold", fontSize: 20}}>Getting Location...</Text>
-    </View>
-  )
-}
+      console.info(
+        Platform.OS == "android"
+          ? `Android: Current Location: ${location.coords.latitude}, ${location.coords.longitude}`
+          : ""
+      );
+      console.info(
+        Platform.OS == "ios"
+          ? `IOS: Current Location: ${location.coords.latitude}, ${location.coords.longitude}`
+          : ""
+      );
+    };
+    getLocation();
+  }, []);
+
+  useEffect(() => {
+    // Distance is in meters
+    if (currentLocation) {
+      let closestDistance = Infinity;
+      let closestTree: Tree | null = null;
+
+      trees.forEach((tree) => {
+        const distance = getPreciseDistance(
+          [currentLocation.longitude, currentLocation.latitude],
+          [tree.longitude, tree.latitude],
+          1
+        );
+
+        if (distance < closestDistance && distance <= 20000) {
+          closestDistance = distance;
+          closestTree = tree;
+        }
+      });
+
+      setClosestTree(closestTree);
+
+      console.info(
+        Platform.OS == "android"
+          ? `Android: Distance to closest tree: ${closestDistance} meters`
+          : ""
+      );
+      console.info(
+        Platform.OS == "ios"
+          ? `IOS: Distance to closest tree: ${closestDistance} meters`
+          : ""
+      );
+    }
+  }, [currentLocation, trees]);
+
+  if (!currentLocation) {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator
+          size={"large"}
+          color={colors.primary}
+          style={{
+            padding: 12,
+            backgroundColor: "#F3EDE2",
+            borderRadius: 12,
+          }}
+        />
+        <Text
+          style={{ marginTop: 15, fontFamily: "Barlow-Bold", fontSize: 20 }}
+        >
+          Getting Location...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <MapView
+        ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: currentLocation?.coords.latitude ?? 43.213679182884576,
-          longitude: currentLocation?.coords.longitude ??-77.9390734326327,
+          latitude: currentLocation?.latitude ?? 43.213679182884576,
+          longitude: currentLocation?.longitude ?? -77.9390734326327,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -125,7 +205,10 @@ if (!currentLocation) {
         {trees.map((tree, index) => (
           <Marker
             ref={(ref) => (markerRefs.current[index] = ref)}
-            coordinate={{ latitude: tree.latitude, longitude: tree.longitude }}
+            coordinate={{
+              latitude: tree.latitude,
+              longitude: tree.longitude,
+            }}
             tracksInfoWindowChanges={false}
             tracksViewChanges={false}
             key={tree.id}
@@ -142,6 +225,15 @@ if (!currentLocation) {
             />
           </Marker>
         ))}
+        <Marker
+          coordinate={{
+            latitude: 43.0936772,
+            longitude: -77.7845867,
+          }}
+          //43.09347722056475, -77.78492871132381
+          tracksInfoWindowChanges={false}
+          tracksViewChanges={false}
+        />
         {routeCords.length > 0 && (
           <Polyline
             coordinates={routeCords.map((item) => ({
@@ -181,6 +273,12 @@ if (!currentLocation) {
           </Text>
         </CustomPressable>
       )}
+      <CustomPressable
+        onPress={animateToLocation}
+        buttonStyle={styles.locationButton}
+      >
+        <FontAwesome5 name="location-arrow" size={18} color={colors.primary} />
+      </CustomPressable>
       <SelectRoute
         modalVisible={modalVisible}
         setModalVisible={() => setModalVisible(false)}
@@ -188,6 +286,7 @@ if (!currentLocation) {
         routes={routes}
         handleRouteSelect={handleRouteSelect}
       />
+      {closestTree && <TreeProximity closestTree={closestTree} />}
     </View>
   );
 }
@@ -200,7 +299,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: Platform.OS == "ios" ? "105%" : "100%",
+    height: Platform.OS == "ios" ? "110%" : "106%",
   },
   button: {
     position: "absolute",
@@ -214,5 +313,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "Barlow-Bold",
     color: colors.primary,
+  },
+  locationButton: {
+    position: "absolute",
+    top: 160,
+    right: 20,
+    backgroundColor: colors.background,
+    padding: 15,
+    borderRadius: 10,
   },
 });
