@@ -168,7 +168,7 @@ export default function Map() {
           color={colors.primary}
           style={{
             padding: 12,
-            backgroundColor: "#F3EDE2",
+            backgroundColor: colors.default,
             borderRadius: 12,
           }}
         />
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: Platform.OS == "ios" ? "110%" : "106%",
+    height: Platform.OS == "ios" ? "105%" : "100%",
   },
   button: {
     position: "absolute",

@@ -20,7 +20,7 @@ export default function TabLayout() {
         activeTintColor: colors.background,
         inactiveTintColor: colors.muted,
         tabStyle: {
-          backgroundColor: "#F3EDE2",
+          backgroundColor: colors.default,
           elevation: 0,
           bottom: 15,
         },

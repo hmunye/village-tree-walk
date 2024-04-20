@@ -7,6 +7,7 @@ const colors: ColorScheme = {
   secondary: "#59546C",
   destructive: "#BA1200",
   muted: "#BFBDC1",
+  default: "#F3EDE2",
 };
 
 export default colors;

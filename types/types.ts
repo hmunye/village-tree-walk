@@ -9,6 +9,7 @@ export type ColorScheme = {
   secondary: ColorValueHex;
   destructive: ColorValueHex;
   muted: ColorValueHex;
+  default: ColorValueHex;
 };
 
 export type CustomButtonProps = {
@@ -19,12 +20,12 @@ export type CustomButtonProps = {
 };
 
 export type SelectRouteProps = {
-  modalVisible: boolean,
-  setModalVisible: (value: React.SetStateAction<boolean>) => void,
-  toggleModal: () => void,
-  routes: MapRoute[],
-  handleRouteSelect: (routeId: number) => Promise<void>
-}
+  modalVisible: boolean;
+  setModalVisible: (value: React.SetStateAction<boolean>) => void;
+  toggleModal: () => void;
+  routes: MapRoute[];
+  handleRouteSelect: (routeId: number) => Promise<void>;
+};
 
 export type Tree = {
   id: number;
