@@ -1,24 +1,20 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
 import CustomPressable from "@/components/ui/CustomPressable";
-import RouteCard from "@/components/ui/RouteCard";
+import SelectRouteModal from "@/components/ui/SelectRouteModal";
 import colors from "@/styles/colors";
 import { darkMapStyle } from "@/styles/mapStyle";
 import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
-import { deviceHeight, deviceWidth } from "@/utils/deviceDimensions";
 import redirectMap from "@/utils/redirectMap";
-import { FontAwesome } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  FlatList,
   Image,
   Platform,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
-import Modal from "react-native-modal";
 
 export default function Map() {
   const db = useSQLiteContext();
@@ -159,49 +155,13 @@ export default function Map() {
           </Text>
         </CustomPressable>
       )}
-      <Modal
-        isVisible={modalVisible}
-        backdropOpacity={Platform.OS == "ios" ? 0.6 : 0.5}
-        animationIn="zoomIn"
-        animationOut="zoomOut"
-        animationInTiming={400}
-        animationOutTiming={400}
-        backdropTransitionInTiming={0}
-        backdropTransitionOutTiming={0}
-        onBackdropPress={() => setModalVisible(false)}
-        statusBarTranslucent
-        deviceWidth={deviceWidth}
-        deviceHeight={deviceHeight + 100}
-        style={styles.modal}
-      >
-        <View style={styles.modalView}>
-          <CustomPressable
-            onPress={toggleModal}
-            buttonStyle={styles.closeModal}
-          >
-            <FontAwesome name="close" size={24} color={colors.foreground} />
-            <Text style={styles.selectText}>Select Route</Text>
-          </CustomPressable>
-
-          <FlatList
-            horizontal
-            initialNumToRender={3}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            alwaysBounceHorizontal
-            data={routes}
-            renderItem={({ item }) => (
-              <RouteCard item={item} onSelect={handleRouteSelect} />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        </View>
-        <View style={styles.swipeContainer}>
-          <FontAwesome name="arrow-left" size={24} color={colors.background} />
-          <Text style={styles.swipeText}>Swipe For More</Text>
-          <FontAwesome name="arrow-right" size={24} color={colors.background} />
-        </View>
-      </Modal>
+      <SelectRouteModal 
+        modalVisible={modalVisible}
+        setModalVisible={() => setModalVisible(false)}
+        toggleModal={toggleModal}
+        routes={routes}
+        handleRouteSelect={handleRouteSelect}
+      />
     </View>
   );
 }
@@ -214,7 +174,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: Platform.OS == "ios" ? "104%" : "100%",
+    height: Platform.OS == "ios" ? "105%" : "100%",
   },
   button: {
     position: "absolute",
@@ -228,44 +188,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "Barlow-Bold",
     color: colors.primary,
-  },
-  modal: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 0,
-  },
-  modalView: {
-    height: "65%",
-    width: "auto",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: colors.muted,
-  },
-  selectText: {
-    fontSize: 24,
-    fontFamily: "Barlow-Black",
-    color: colors.foreground,
-    marginLeft: 32,
-  },
-  closeModal: {
-    padding: 10,
-    paddingLeft: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    marginTop: 10,
-  },
-  swipeContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  swipeText: {
-    fontSize: 24,
-    fontFamily: "Barlow-Bold",
-    margin: 15,
-    color: colors.background,
   },
 });

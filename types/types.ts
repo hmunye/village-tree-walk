@@ -18,6 +18,14 @@ export type CustomButtonProps = {
   textStyle?: StyleProp<TextStyle>;
 };
 
+export type SelectRouteModalProps = {
+  modalVisible: boolean,
+  setModalVisible: (value: React.SetStateAction<boolean>) => void,
+  toggleModal: () => void,
+  routes: MapRoute[],
+  handleRouteSelect: (routeId: number) => Promise<void>
+}
+
 export type Tree = {
   id: number;
   latitude: number;
