@@ -27,6 +27,11 @@ export type SelectRouteProps = {
   handleRouteSelect: (routeId: number) => Promise<void>;
 };
 
+export type PreviewRouteProps = {
+  onConfirmRoute: () => void;
+  onBack: () => void;
+};
+
 export type Tree = {
   id: number;
   latitude: number;

@@ -1,5 +1,6 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
 import CustomPressable from "@/components/ui/CustomPressable";
+import PreviewRoute from "@/components/ui/PreviewRoute";
 import SelectRoute from "@/components/ui/SelectRoute";
 import TreeProximity from "@/components/ui/TreeProximity";
 import colors from "@/styles/colors";
@@ -9,7 +10,7 @@ import redirectMap from "@/utils/redirectMap";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useSQLiteContext } from "expo-sqlite/next";
-import { getPreciseDistance } from "geolib";
+import { getCenter, getPreciseDistance } from "geolib";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -22,10 +23,11 @@ import {
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 // Distance from user to closest tree in meters
-const DISTANCE_THRESHOLD_IN_METERS = 20;
+const DISTANCE_THRESHOLD_IN_METERS = 20_000;
 
 export default function Map() {
   const db = useSQLiteContext();
+
   const [trees, setTrees] = useState<Tree[]>([]);
   const [closestTree, setClosestTree] = useState<Tree | null>(null);
   const [closestDistance, setClosestDistance] = useState<number>(Infinity);
@@ -36,13 +38,12 @@ export default function Map() {
   const mapRef = useRef<MapView>(null);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [isRouteActive, setIsRouteActive] = useState(false);
   const [chooseTreeWalkVisible, setChooseTreeWalkVisible] = useState(true);
+
   const [currentLocation, setCurrentLocation] =
     useState<Location.LocationObjectCoords>();
-  const [markerCoordinates, setMarkerCoordinates] = useState({
-    latitude: 43.0936772,
-    longitude: -77.7845867,
-  });
 
   // Need this for marker performance on Android
   const doRedraw = (index: number) => {
@@ -58,20 +59,57 @@ export default function Map() {
       setRouteCords(routeCordsRows);
       setModalVisible(false);
       setChooseTreeWalkVisible(false);
-      // Redirect user to their maps application for directions to first tree on route
-      if (routeCordsRows && routeCordsRows.length > 0) {
-        redirectMap(routeCordsRows[0].latitude, routeCordsRows[0].longitude);
-      } else {
-        console.error("routeCords is undefined or empty");
+      setPreviewVisible(true);
+
+      const center = previewRoute(routeCordsRows);
+
+      if (currentLocation && mapRef.current && center && routeCords) {
+        mapRef.current.animateCamera({
+          center: {
+            latitude: center.latitude,
+            longitude: center.longitude,
+          },
+        });
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  const previewRoute = (routeCordsRows: RouteCoordinates[]) => {
+    if (routeCordsRows && routeCordsRows.length > 0) {
+      const coordsForCenter = routeCordsRows.map(({ latitude, longitude }) => ({
+        latitude,
+        longitude,
+      }));
+      return getCenter(coordsForCenter);
+    } else {
+      console.error("routeCordsRows is undefined or empty");
+    }
+  };
+
+  const handleConfirmRoute = () => {
+    setPreviewVisible(false);
+    setIsRouteActive(true);
+    // Redirect user to their maps application for directions to first tree on route
+    if (routeCords && routeCords.length > 0) {
+      redirectMap(routeCords[0].latitude, routeCords[0].longitude);
+    } else {
+      console.error("routeCords is undefined or empty");
+    }
+  };
+
+  const handleGoBack = () => {
+    setPreviewVisible(false);
+    setModalVisible(true);
+    setChooseTreeWalkVisible(true);
+    setRouteCords([]);
+  };
+
   const handleStopRoute = () => {
     setRouteCords([]);
     setChooseTreeWalkVisible(true);
+    setIsRouteActive(false);
   };
 
   const toggleModal = () => {
@@ -85,7 +123,6 @@ export default function Map() {
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
         },
-        zoom: 16,
       });
     }
   };
@@ -119,6 +156,14 @@ export default function Map() {
         accuracy: Location.Accuracy.Highest,
       });
       setCurrentLocation(location.coords);
+      if (isRouteActive && mapRef.current) {
+        mapRef.current.animateCamera({
+          center: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+        });
+      }
       console.info(
         Platform.OS === "android"
           ? "Android: New location update: " +
@@ -137,10 +182,11 @@ export default function Map() {
       );
     };
 
-    const intervalId = setInterval(fetchLocation, 5000); // Fetch location every 5 seconds
+    const intervalDuration = isRouteActive ? 1000 : 5000; // 1 second if route is active, 5 seconds otherwise
+    const intervalId = setInterval(fetchLocation, intervalDuration);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isRouteActive]);
 
   useEffect(() => {
     // Distance is in meters
@@ -253,7 +299,7 @@ export default function Map() {
           />
         )}
       </MapView>
-      {chooseTreeWalkVisible && (
+      {chooseTreeWalkVisible && !previewVisible && (
         <CustomPressable
           onPress={() => setModalVisible(true)}
           buttonStyle={styles.button}
@@ -261,7 +307,7 @@ export default function Map() {
           <Text style={styles.buttonText}>Choose Tree Walk</Text>
         </CustomPressable>
       )}
-      {!chooseTreeWalkVisible && (
+      {!chooseTreeWalkVisible && !previewVisible && (
         <CustomPressable
           onPress={handleStopRoute}
           buttonStyle={[
@@ -281,12 +327,18 @@ export default function Map() {
           </Text>
         </CustomPressable>
       )}
-      <CustomPressable
-        onPress={animateToLocation}
-        buttonStyle={styles.locationButton}
-      >
-        <FontAwesome5 name="location-arrow" size={18} color={colors.primary} />
-      </CustomPressable>
+      {!previewVisible && !isRouteActive && (
+        <CustomPressable
+          onPress={animateToLocation}
+          buttonStyle={styles.locationButton}
+        >
+          <FontAwesome5
+            name="location-arrow"
+            size={18}
+            color={colors.primary}
+          />
+        </CustomPressable>
+      )}
       <SelectRoute
         modalVisible={modalVisible}
         setModalVisible={() => setModalVisible(false)}
@@ -298,6 +350,12 @@ export default function Map() {
         <TreeProximity
           closestTree={closestTree}
           closestDistance={closestDistance}
+        />
+      )}
+      {previewVisible && (
+        <PreviewRoute
+          onBack={handleGoBack}
+          onConfirmRoute={handleConfirmRoute}
         />
       )}
     </View>

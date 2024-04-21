@@ -43,7 +43,7 @@ export default function TreeProximity({
             />
           </View>
         </View>
-        <Text style={styles.cardItemDescription}>{closestTree.id}</Text>
+        <Text style={styles.cardItemDescription}>{closestTree.address}</Text>
         <Text style={styles.cardItemDescription}>
           {closestDistance} Meters Away
         </Text>

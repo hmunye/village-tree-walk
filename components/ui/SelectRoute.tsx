@@ -34,7 +34,6 @@ export default function SelectRoute({
       <View style={styles.modalView}>
         <CustomPressable onPress={toggleModal} buttonStyle={styles.closeModal}>
           <FontAwesome name="close" size={24} color={colors.foreground} />
-          <Text style={styles.selectText}>Select Route</Text>
         </CustomPressable>
 
         <FlatList
@@ -74,20 +73,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: colors.muted,
   },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   closeModal: {
     padding: 10,
-    paddingLeft: 20,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
     marginTop: 10,
-  },
-  selectText: {
-    fontSize: 28,
-    fontFamily: "Barlow-Black",
-    color: colors.primary,
-    textTransform: "uppercase",
-    marginLeft: 32,
+    marginLeft: 10,
   },
   swipeContainer: {
     flexDirection: "row",
