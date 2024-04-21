@@ -21,10 +21,14 @@ import {
 } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 
+// Distance from user to closest tree in meters
+const DISTANCE_THRESHOLD_IN_METERS = 20;
+
 export default function Map() {
   const db = useSQLiteContext();
   const [trees, setTrees] = useState<Tree[]>([]);
   const [closestTree, setClosestTree] = useState<Tree | null>(null);
+  const [closestDistance, setClosestDistance] = useState<number>(Infinity);
   const [routes, setRoutes] = useState<MapRoute[]>([]);
   const [routeCords, setRouteCords] = useState<RouteCoordinates[]>([]);
 
@@ -81,6 +85,7 @@ export default function Map() {
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
         },
+        zoom: 16,
       });
     }
   };
@@ -103,27 +108,38 @@ export default function Map() {
   }, [db]);
 
   useEffect(() => {
-    const getLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+    const fetchLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.error("Permission to access location was denied");
+        console.log("Permission to access location was denied");
         return;
       }
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
 
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Highest,
+      });
+      setCurrentLocation(location.coords);
       console.info(
-        Platform.OS == "android"
-          ? `Android: Current Location: ${location.coords.latitude}, ${location.coords.longitude}`
+        Platform.OS === "android"
+          ? "Android: New location update: " +
+              location.coords.latitude +
+              ", " +
+              location.coords.longitude
           : ""
       );
       console.info(
-        Platform.OS == "ios"
-          ? `IOS: Current Location: ${location.coords.latitude}, ${location.coords.longitude}`
+        Platform.OS === "ios"
+          ? "IOS: New location update: " +
+              location.coords.latitude +
+              ", " +
+              location.coords.longitude
           : ""
       );
     };
-    getLocation();
+
+    const intervalId = setInterval(fetchLocation, 5000); // Fetch location every 5 seconds
+
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -146,6 +162,7 @@ export default function Map() {
       });
 
       setClosestTree(closestTree);
+      setClosestDistance(closestDistance);
 
       console.info(
         Platform.OS == "android"
@@ -225,15 +242,6 @@ export default function Map() {
             />
           </Marker>
         ))}
-        <Marker
-          coordinate={{
-            latitude: 43.0936772,
-            longitude: -77.7845867,
-          }}
-          //43.09347722056475, -77.78492871132381
-          tracksInfoWindowChanges={false}
-          tracksViewChanges={false}
-        />
         {routeCords.length > 0 && (
           <Polyline
             coordinates={routeCords.map((item) => ({
@@ -286,7 +294,12 @@ export default function Map() {
         routes={routes}
         handleRouteSelect={handleRouteSelect}
       />
-      {closestTree && <TreeProximity closestTree={closestTree} />}
+      {closestTree && closestDistance <= DISTANCE_THRESHOLD_IN_METERS && (
+        <TreeProximity
+          closestTree={closestTree}
+          closestDistance={closestDistance}
+        />
+      )}
     </View>
   );
 }
@@ -304,7 +317,7 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     top: 80,
-    right: 20,
+    right: 21,
     backgroundColor: colors.background,
     padding: 15,
     borderRadius: 10,
@@ -317,7 +330,7 @@ const styles = StyleSheet.create({
   locationButton: {
     position: "absolute",
     top: 160,
-    right: 20,
+    right: 21,
     backgroundColor: colors.background,
     padding: 15,
     borderRadius: 10,

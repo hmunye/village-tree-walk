@@ -83,9 +83,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   selectText: {
-    fontSize: 24,
+    fontSize: 28,
     fontFamily: "Barlow-Black",
-    color: colors.foreground,
+    color: colors.primary,
+    textTransform: "uppercase",
     marginLeft: 32,
   },
   swipeContainer: {

@@ -5,10 +5,16 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function TreeProximity({ closestTree }: { closestTree: Tree }) {
+export default function TreeProximity({
+  closestTree,
+  closestDistance,
+}: {
+  closestTree: Tree;
+  closestDistance: number;
+}) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = useMemo(() => ["15%", "48%"], []);
+  const snapPoints = useMemo(() => ["15%", "52%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.info("handleSheetChanges", index);
@@ -33,11 +39,14 @@ export default function TreeProximity({ closestTree }: { closestTree: Tree }) {
           <View style={styles.imageContainer}>
             <Image
               source={treeImage}
-              style={{ width: 250, height: 250, resizeMode: "cover" }}
+              style={{ width: 300, height: 250, resizeMode: "cover" }}
             />
           </View>
         </View>
-        <Text style={styles.cardItemDescription}>{closestTree.address}</Text>
+        <Text style={styles.cardItemDescription}>{closestTree.id}</Text>
+        <Text style={styles.cardItemDescription}>
+          {closestDistance} Meters Away
+        </Text>
       </BottomSheetView>
     </BottomSheetModal>
   );
@@ -64,7 +73,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   imageContainer: {
-    width: 250,
+    width: 300,
     height: 250,
     borderRadius: 20,
     overflow: "hidden",
@@ -82,6 +91,6 @@ const styles = StyleSheet.create({
     fontFamily: "Barlow-Medium",
     color: colors.foreground,
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 15,
   },
 });

@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     backgroundColor: "#EEEFFF",
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.foreground,
   },
   closeContainer: {
