@@ -14,9 +14,10 @@ export default function TreeProximity({
 }) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = useMemo(() => ["15%", "52%"], []);
+  const snapPoints = useMemo(() => ["15%", "50%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
+    // TODO: Make use of this
     console.info("handleSheetChanges", index);
   }, []);
 

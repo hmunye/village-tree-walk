@@ -7,7 +7,7 @@ import CustomPressable from "./CustomPressable";
 
 export default function PreviewRoute({
   onConfirmRoute,
-  onBack,
+  onCancel,
 }: PreviewRouteProps) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -38,8 +38,8 @@ export default function PreviewRoute({
           app.
         </Text>
         <View style={styles.cardContainer}>
-          <CustomPressable onPress={onBack} buttonStyle={styles.backButton}>
-            <Text style={styles.backButtonText}>Go Back</Text>
+          <CustomPressable onPress={onCancel} buttonStyle={styles.backButton}>
+            <Text style={styles.backButtonText}>Cancel</Text>
           </CustomPressable>
           <CustomPressable
             onPress={onConfirmRoute}

@@ -23,7 +23,7 @@ import {
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 // Distance from user to closest tree in meters
-const DISTANCE_THRESHOLD_IN_METERS = 20_000;
+const DISTANCE_THRESHOLD_IN_METERS = 20;
 
 export default function Map() {
   const db = useSQLiteContext();
@@ -63,7 +63,7 @@ export default function Map() {
 
       const center = previewRoute(routeCordsRows);
 
-      if (currentLocation && mapRef.current && center && routeCords) {
+      if (currentLocation && mapRef.current && center) {
         mapRef.current.animateCamera({
           center: {
             latitude: center.latitude,
@@ -99,7 +99,7 @@ export default function Map() {
     }
   };
 
-  const handleGoBack = () => {
+  const handleCancelRoutePreview = () => {
     setPreviewVisible(false);
     setModalVisible(true);
     setChooseTreeWalkVisible(true);
@@ -148,7 +148,7 @@ export default function Map() {
     const fetchLocation = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permission to access location was denied");
+        console.error("Permission to access location was denied");
         return;
       }
 
@@ -189,12 +189,12 @@ export default function Map() {
   }, [isRouteActive]);
 
   useEffect(() => {
-    // Distance is in meters
     if (currentLocation) {
       let closestDistance = Infinity;
       let closestTree: Tree | null = null;
 
       trees.forEach((tree) => {
+        // Distance is in meters
         const distance = getPreciseDistance(
           [currentLocation.longitude, currentLocation.latitude],
           [tree.longitude, tree.latitude],
@@ -225,18 +225,15 @@ export default function Map() {
 
   if (!currentLocation) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <ActivityIndicator
-          size={"large"}
-          color={colors.primary}
-          style={{
-            padding: 12,
-            backgroundColor: colors.default,
-            borderRadius: 12,
-          }}
-        />
+      <View style={[styles.container, { backgroundColor: colors.default }]}>
+        <ActivityIndicator size={"large"} color={colors.primary} />
         <Text
-          style={{ marginTop: 15, fontFamily: "Barlow-Bold", fontSize: 20 }}
+          style={{
+            marginTop: 20,
+            fontFamily: "Barlow-Bold",
+            fontSize: 22,
+            color: colors.foreground,
+          }}
         >
           Getting Location...
         </Text>
@@ -354,7 +351,7 @@ export default function Map() {
       )}
       {previewVisible && (
         <PreviewRoute
-          onBack={handleGoBack}
+          onCancel={handleCancelRoutePreview}
           onConfirmRoute={handleConfirmRoute}
         />
       )}

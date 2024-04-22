@@ -22,7 +22,6 @@ export default function RouteCard({
         </View>
         <Text style={styles.cardItemDescription}>{item.description}</Text>
         <View style={styles.buttonContainer}>
-          {/* TODO: Move text outside of pressable */}
           <CustomPressable
             buttonStyle={styles.button}
             onPress={() => onSelect(item.id)}

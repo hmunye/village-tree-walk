@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { Pressable, Text } from "react-native";
 
-import { CustomButtonProps } from "@/types/types";
+import { CustomPressableProps } from "@/types/types";
 import React from "react";
 
 export default function CustomPressable({
@@ -9,7 +9,7 @@ export default function CustomPressable({
   children,
   buttonStyle,
   textStyle,
-}: CustomButtonProps) {
+}: CustomPressableProps) {
   const triggerHapticFeedback = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();

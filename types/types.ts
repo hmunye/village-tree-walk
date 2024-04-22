@@ -12,7 +12,7 @@ export type ColorScheme = {
   default: ColorValueHex;
 };
 
-export type CustomButtonProps = {
+export type CustomPressableProps = {
   onPress: () => void;
   children?: React.ReactNode;
   buttonStyle?: StyleProp<ViewStyle>;
@@ -29,7 +29,7 @@ export type SelectRouteProps = {
 
 export type PreviewRouteProps = {
   onConfirmRoute: () => void;
-  onBack: () => void;
+  onCancel: () => void;
 };
 
 export type Tree = {

@@ -43,13 +43,10 @@ export default function RootLayout() {
   }, [fontLoaded, dbLoaded]);
 
   if (!fontLoaded || !dbLoaded) {
+    // TODO: Change to loading indicator
     return null;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>

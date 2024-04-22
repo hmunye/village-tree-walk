@@ -38,7 +38,7 @@ export default function SelectRoute({
 
         <FlatList
           horizontal
-          initialNumToRender={3}
+          initialNumToRender={2}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           alwaysBounceHorizontal
