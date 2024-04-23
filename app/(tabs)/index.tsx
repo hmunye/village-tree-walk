@@ -23,7 +23,7 @@ import {
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 // Distance from user to closest tree in meters
-const DISTANCE_THRESHOLD_IN_METERS = 20;
+const DISTANCE_THRESHOLD_IN_METERS = 19_000;
 
 export default function Map() {
   const db = useSQLiteContext();
@@ -156,14 +156,6 @@ export default function Map() {
         accuracy: Location.Accuracy.Highest,
       });
       setCurrentLocation(location.coords);
-      if (isRouteActive && mapRef.current) {
-        mapRef.current.animateCamera({
-          center: {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-        });
-      }
       console.info(
         Platform.OS === "android"
           ? "Android: New location update: " +
@@ -182,7 +174,7 @@ export default function Map() {
       );
     };
 
-    const intervalDuration = isRouteActive ? 1000 : 5000; // 1 second if route is active, 5 seconds otherwise
+    const intervalDuration = isRouteActive ? 1000 : 5000; // If route is active, every 1 second, else every 5 seconds
     const intervalId = setInterval(fetchLocation, intervalDuration);
 
     return () => clearInterval(intervalId);
@@ -201,7 +193,10 @@ export default function Map() {
           1
         );
 
-        if (distance < closestDistance && distance <= 20000) {
+        if (
+          distance < closestDistance &&
+          distance <= DISTANCE_THRESHOLD_IN_METERS
+        ) {
           closestDistance = distance;
           closestTree = tree;
         }
@@ -324,7 +319,7 @@ export default function Map() {
           </Text>
         </CustomPressable>
       )}
-      {!previewVisible && !isRouteActive && (
+      {!previewVisible && (
         <CustomPressable
           onPress={animateToLocation}
           buttonStyle={styles.locationButton}

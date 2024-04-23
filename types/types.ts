@@ -1,4 +1,9 @@
-import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import {
+  ImageSourcePropType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 
 type ColorValueHex = `#${string}`;
 
@@ -30,6 +35,10 @@ export type SelectRouteProps = {
 export type PreviewRouteProps = {
   onConfirmRoute: () => void;
   onCancel: () => void;
+};
+
+export type TreeImagesType = {
+  [key: string]: ImageSourcePropType;
 };
 
 export type Tree = {

@@ -1,10 +1,11 @@
-import treeImage from "@/assets/images/tree.png";
+import { TreeImages } from "@/assets/images";
 import colors from "@/styles/colors";
 import { Tree } from "@/types/types";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
+// TODO: Add skeleton for image when loading
 export default function TreeProximity({
   closestTree,
   closestDistance,
@@ -39,7 +40,7 @@ export default function TreeProximity({
           <Text style={styles.cardItemText}>{closestTree.species}</Text>
           <View style={styles.imageContainer}>
             <Image
-              source={treeImage}
+              source={TreeImages[closestTree.species]}
               style={{ width: 300, height: 250, resizeMode: "cover" }}
             />
           </View>
