@@ -1,6 +1,5 @@
-import colors from "@/styles/colors";
+import { colors, dimensions } from "@/styles";
 import { SelectRouteProps } from "@/types/types";
-import { deviceHeight, deviceWidth } from "@/utils/deviceDimensions";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
@@ -27,8 +26,8 @@ export default function SelectRoute({
       backdropTransitionOutTiming={0}
       onBackdropPress={() => setModalVisible(false)}
       statusBarTranslucent
-      deviceWidth={deviceWidth}
-      deviceHeight={deviceHeight + 100}
+      deviceWidth={dimensions.deviceWidth}
+      deviceHeight={dimensions.deviceHeight + 100}
       style={styles.modal}
     >
       <View style={styles.modalView}>

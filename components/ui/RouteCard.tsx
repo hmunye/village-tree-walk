@@ -1,4 +1,4 @@
-import colors from "@/styles/colors";
+import { colors } from "@/styles";
 import { MapRoute } from "@/types/types";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";

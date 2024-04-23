@@ -1,4 +1,4 @@
-import colors from "@/styles/colors";
+import { colors } from "@/styles";
 import { PreviewRouteProps } from "@/types/types";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";

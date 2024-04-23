@@ -1,5 +1,5 @@
 import { TreeImages } from "@/assets/images";
-import colors from "@/styles/colors";
+import { colors } from "@/styles";
 import { Tree } from "@/types/types";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";

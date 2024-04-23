@@ -1,9 +1,10 @@
 import treeMarker from "@/assets/images/tree_marker.webp";
 import CustomPressable from "@/components/ui/CustomPressable";
+import GettingLocation from "@/components/ui/GettingLocation";
 import PreviewRoute from "@/components/ui/PreviewRoute";
 import SelectRoute from "@/components/ui/SelectRoute";
 import TreeProximity from "@/components/ui/TreeProximity";
-import colors from "@/styles/colors";
+import { colors } from "@/styles";
 import { darkMapStyle } from "@/styles/mapStyle";
 import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
 import redirectMap from "@/utils/redirectMap";
@@ -12,14 +13,7 @@ import * as Location from "expo-location";
 import { useSQLiteContext } from "expo-sqlite/next";
 import { getCenter, getPreciseDistance } from "geolib";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 // Distance from user to closest tree in meters
@@ -219,21 +213,7 @@ export default function Map() {
   }, [currentLocation, trees]);
 
   if (!currentLocation) {
-    return (
-      <View style={[styles.container, { backgroundColor: colors.default }]}>
-        <ActivityIndicator size={"large"} color={colors.primary} />
-        <Text
-          style={{
-            marginTop: 20,
-            fontFamily: "Barlow-Bold",
-            fontSize: 22,
-            color: colors.foreground,
-          }}
-        >
-          Getting Location...
-        </Text>
-      </View>
-    );
+    return <GettingLocation />;
   }
 
   return (
@@ -276,7 +256,7 @@ export default function Map() {
               onLoad={() =>
                 Platform.OS == "ios" ? undefined : doRedraw(index)
               }
-              style={{ width: 48, height: 48, resizeMode: "contain" }}
+              style={{ width: 52, height: 52, resizeMode: "contain" }}
             />
           </Marker>
         ))}

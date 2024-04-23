@@ -1,5 +1,5 @@
 import TreeCard from "@/components/ui/TreeCard";
-import colors from "@/styles/colors";
+import { colors } from "@/styles";
 import { Tree } from "@/types/types";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
