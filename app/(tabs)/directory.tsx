@@ -16,7 +16,7 @@ export default function Directory() {
         setTrees(rows as Tree[]);
       } catch (error) {
         // TODO: Better error handling
-        console.error(error);
+        console.error("Fetch Directory Data error: ", error);
       }
     }
 

@@ -14,6 +14,7 @@ export default function PreviewRoute({
   const snapPoints = useMemo(() => ["25%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
+    // TODO: Make use of this
     console.info("handleSheetChanges", index);
   }, []);
 

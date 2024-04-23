@@ -27,7 +27,7 @@ export default function RootLayout() {
       await openDatabase()
         .then(() => setDbLoaded(true))
         // TODO: Better error handling
-        .catch((error) => console.error(error));
+        .catch((error) => console.error("Open Database error: ", error));
     }
     loadDb();
   }, []);

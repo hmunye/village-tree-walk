@@ -37,6 +37,11 @@ export type PreviewRouteProps = {
   onCancel: () => void;
 };
 
+export type animateLocationProps = {
+  latitude?: number;
+  longitude?: number;
+};
+
 export type TreeImagesType = {
   [key: string]: ImageSourcePropType;
 };

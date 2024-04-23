@@ -6,7 +6,12 @@ import SelectRoute from "@/components/ui/SelectRoute";
 import TreeProximity from "@/components/ui/TreeProximity";
 import { colors } from "@/styles";
 import { darkMapStyle } from "@/styles/mapStyle";
-import { MapRoute, RouteCoordinates, Tree } from "@/types/types";
+import {
+  MapRoute,
+  RouteCoordinates,
+  Tree,
+  animateLocationProps,
+} from "@/types/types";
 import redirectMap from "@/utils/redirectMap";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as Location from "expo-location";
@@ -31,15 +36,15 @@ export default function Map() {
   const markerRefs = useRef<any[]>([]);
   const mapRef = useRef<MapView>(null);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [previewVisible, setPreviewVisible] = useState(false);
   const [isRouteActive, setIsRouteActive] = useState(false);
-  const [chooseTreeWalkVisible, setChooseTreeWalkVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [isTreeWalkButtonVisible, setIsTreeWalkButtonVisible] = useState(true);
 
   const [currentLocation, setCurrentLocation] =
     useState<Location.LocationObjectCoords>();
 
-  // Need this for marker performance on Android
+  // Need this for custom map marker performance on Android
   const doRedraw = (index: number) => {
     markerRefs.current[index].redraw();
   };
@@ -50,23 +55,21 @@ export default function Map() {
         "SELECT * FROM route_coordinates WHERE route_id = ?",
         [routeId]
       );
+      toggleModal();
+      setIsTreeWalkButtonVisible(false);
       setRouteCords(routeCordsRows);
-      setModalVisible(false);
-      setChooseTreeWalkVisible(false);
-      setPreviewVisible(true);
+      setIsPreviewVisible(true);
 
       const center = previewRoute(routeCordsRows);
 
-      if (currentLocation && mapRef.current && center) {
-        mapRef.current.animateCamera({
-          center: {
-            latitude: center.latitude,
-            longitude: center.longitude,
-          },
+      if (center) {
+        animateToLocation({
+          latitude: center.latitude,
+          longitude: center.longitude,
         });
       }
     } catch (error) {
-      console.error(error);
+      console.error("Handle Route Select error: ", error);
     }
   };
 
@@ -83,8 +86,9 @@ export default function Map() {
   };
 
   const handleConfirmRoute = () => {
-    setPreviewVisible(false);
+    setIsPreviewVisible(false);
     setIsRouteActive(true);
+    animateToLocation();
     // Redirect user to their maps application for directions to first tree on route
     if (routeCords && routeCords.length > 0) {
       redirectMap(routeCords[0].latitude, routeCords[0].longitude);
@@ -94,28 +98,44 @@ export default function Map() {
   };
 
   const handleCancelRoutePreview = () => {
-    setPreviewVisible(false);
-    setModalVisible(true);
-    setChooseTreeWalkVisible(true);
+    toggleModal();
+    setIsPreviewVisible(false);
+    setIsTreeWalkButtonVisible(true);
     setRouteCords([]);
   };
 
   const handleStopRoute = () => {
     setRouteCords([]);
-    setChooseTreeWalkVisible(true);
+    setIsTreeWalkButtonVisible(true);
     setIsRouteActive(false);
   };
 
   const toggleModal = () => {
-    setModalVisible(!modalVisible);
+    setIsModalVisible(!isModalVisible);
   };
 
-  const animateToLocation = () => {
-    if (currentLocation && mapRef.current) {
+  const animateToLocation = ({
+    latitude,
+    longitude,
+  }: animateLocationProps = {}) => {
+    // If no specific coordinates are provided, use currentLocation
+    if (!latitude && !longitude && currentLocation && mapRef.current) {
       mapRef.current.animateCamera({
         center: {
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
+        },
+      });
+    } else if (
+      latitude !== undefined &&
+      longitude !== undefined &&
+      mapRef.current
+    ) {
+      // If specific coordinates are provided, use them
+      mapRef.current.animateCamera({
+        center: {
+          latitude: latitude,
+          longitude: longitude,
         },
       });
     }
@@ -131,7 +151,7 @@ export default function Map() {
         setRoutes(routeRows as MapRoute[]);
       } catch (error) {
         // TODO: Better error handling
-        console.error(error);
+        console.error("Fetch Map Trees or Routes error: ", error);
       }
     }
 
@@ -271,20 +291,20 @@ export default function Map() {
           />
         )}
       </MapView>
-      {chooseTreeWalkVisible && !previewVisible && (
+      {isTreeWalkButtonVisible && !isPreviewVisible && (
         <CustomPressable
-          onPress={() => setModalVisible(true)}
+          onPress={() => toggleModal()}
           buttonStyle={styles.button}
         >
           <Text style={styles.buttonText}>Choose Tree Walk</Text>
         </CustomPressable>
       )}
-      {!chooseTreeWalkVisible && !previewVisible && (
+      {!isTreeWalkButtonVisible && !isPreviewVisible && (
         <CustomPressable
           onPress={handleStopRoute}
           buttonStyle={[
             styles.button,
-            !chooseTreeWalkVisible
+            !isTreeWalkButtonVisible
               ? { backgroundColor: colors.destructive }
               : {},
           ]}
@@ -292,14 +312,14 @@ export default function Map() {
           <Text
             style={[
               styles.buttonText,
-              !chooseTreeWalkVisible ? { color: colors.background } : {},
+              !isTreeWalkButtonVisible ? { color: colors.background } : {},
             ]}
           >
             Stop Route
           </Text>
         </CustomPressable>
       )}
-      {!previewVisible && (
+      {!isPreviewVisible && (
         <CustomPressable
           onPress={animateToLocation}
           buttonStyle={styles.locationButton}
@@ -312,8 +332,8 @@ export default function Map() {
         </CustomPressable>
       )}
       <SelectRoute
-        modalVisible={modalVisible}
-        setModalVisible={() => setModalVisible(false)}
+        modalVisible={isModalVisible}
+        setModalVisible={() => toggleModal()}
         toggleModal={toggleModal}
         routes={routes}
         handleRouteSelect={handleRouteSelect}
@@ -324,7 +344,7 @@ export default function Map() {
           closestDistance={closestDistance}
         />
       )}
-      {previewVisible && (
+      {isPreviewVisible && (
         <PreviewRoute
           onCancel={handleCancelRoutePreview}
           onConfirmRoute={handleConfirmRoute}
