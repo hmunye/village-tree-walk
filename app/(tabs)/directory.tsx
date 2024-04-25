@@ -3,7 +3,7 @@ import { colors } from "@/styles";
 import { Tree } from "@/types/types";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 export default function Directory() {
   const db = useSQLiteContext();
@@ -12,8 +12,10 @@ export default function Directory() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const rows = await db.getAllAsync("SELECT * FROM tree");
-        setTrees(rows as Tree[]);
+        const trees = await db.getAllAsync(
+          "SELECT * FROM tree GROUP BY species"
+        );
+        setTrees(trees as Tree[]);
       } catch (error) {
         // TODO: Better error handling
         console.error("Fetch Directory Data error: ", error);
@@ -25,6 +27,9 @@ export default function Directory() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.title}>
+        <Text style={styles.text}>Tree Directory</Text>
+      </View>
       <FlatList
         horizontal
         initialNumToRender={3}
@@ -45,8 +50,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.background,
   },
+  title: {
+    position: "absolute",
+    top: 100,
+    left: 50,
+  },
   text: {
-    fontSize: 40,
-    fontFamily: "Barlow",
+    fontSize: 52,
+    color: colors.primary,
+    fontFamily: "Barlow-Bold",
   },
 });

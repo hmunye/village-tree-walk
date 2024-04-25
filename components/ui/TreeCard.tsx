@@ -1,36 +1,52 @@
+import { TreeImages } from "@/assets/images";
 import { colors } from "@/styles";
 import { Tree } from "@/types/types";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 
 export default function TreeCard({ item }: { item: Tree }) {
   return (
-    <View style={styles.item}>
-      <Text style={styles.text}>{item.id}</Text>
-      <Text style={styles.text}>{item.latitude}</Text>
-      <Text style={styles.text}>{item.longitude}</Text>
-      <Text style={styles.text}>{item.address}</Text>
-      <Text style={styles.text}>{item.dbh}</Text>
-      <Text style={styles.text}>{item.species}</Text>
-      <Text style={styles.text}>{item.description}</Text>
-      <Text style={styles.text}>{item.created_at}</Text>
-      <Text style={styles.text}>{item.updated_at}</Text>
+    <View style={styles.container}>
+      <ImageBackground
+        source={TreeImages[item.species]}
+        style={styles.image}
+        imageStyle={{ borderRadius: 30 }}
+      >
+        <View style={styles.textContainer}>
+          <Text style={styles.speciesText}>{item.species}</Text>
+          <Text style={styles.addressText}>{item.address}</Text>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    width: 200,
-    height: 500,
-    padding: 20,
-    marginVertical: "60%",
-    marginHorizontal: 20,
-    backgroundColor: colors.background,
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 10,
   },
-  text: {
+  image: {
+    width: 380,
+    height: 430,
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  textContainer: {
+    backgroundColor: "rgba(0,0,0,0.7)",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    position: "absolute",
+    bottom: 50,
+  },
+  speciesText: {
+    color: colors.background,
+    fontSize: 28,
+  },
+  addressText: {
+    color: colors.background,
     fontSize: 16,
-    fontFamily: "Barlow",
-    color: colors.foreground,
   },
 });

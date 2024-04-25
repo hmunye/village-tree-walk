@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "villagetreewalk.app"
-               BlueprintName = "villagetreewalk"
-               ReferencedContainer = "container:villagetreewalk.xcodeproj">
+               BuildableName = "TreeWalk.app"
+               BlueprintName = "TreeWalk"
+               ReferencedContainer = "container:TreeWalk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "villagetreewalkTests.xctest"
-               BlueprintName = "villagetreewalkTests"
-               ReferencedContainer = "container:villagetreewalk.xcodeproj">
+               BuildableName = "TreeWalkTests.xctest"
+               BlueprintName = "TreeWalkTests"
+               ReferencedContainer = "container:TreeWalk.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "villagetreewalk.app"
-            BlueprintName = "villagetreewalk"
-            ReferencedContainer = "container:villagetreewalk.xcodeproj">
+            BuildableName = "TreeWalk.app"
+            BlueprintName = "TreeWalk"
+            ReferencedContainer = "container:TreeWalk.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "villagetreewalk.app"
-            BlueprintName = "villagetreewalk"
-            ReferencedContainer = "container:villagetreewalk.xcodeproj">
+            BuildableName = "TreeWalk.app"
+            BlueprintName = "TreeWalk"
+            ReferencedContainer = "container:TreeWalk.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -19,7 +19,7 @@ export default function TreeProximity({
 
   const handleSheetChanges = useCallback((index: number) => {
     // TODO: Make use of this
-    console.info("handleSheetChanges", index);
+    console.info("handleSheetChanges: ", index);
   }, []);
 
   useEffect(() => {

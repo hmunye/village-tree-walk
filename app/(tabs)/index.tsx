@@ -22,7 +22,7 @@ import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 // Distance from user to closest tree in meters
-const DISTANCE_THRESHOLD_IN_METERS = 19_000;
+const DISTANCE_THRESHOLD_IN_METERS = 10;
 
 export default function Map() {
   const db = useSQLiteContext();
@@ -47,6 +47,37 @@ export default function Map() {
   // Need this for custom map marker performance on Android
   const doRedraw = (index: number) => {
     markerRefs.current[index].redraw();
+  };
+
+  const animateToLocation = ({
+    latitude,
+    longitude,
+  }: animateLocationProps = {}) => {
+    // If no specific coordinates are provided, use currentLocation
+    if (!latitude && !longitude && currentLocation && mapRef.current) {
+      mapRef.current.animateCamera({
+        center: {
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+        },
+      });
+    } else if (
+      latitude !== undefined &&
+      longitude !== undefined &&
+      mapRef.current
+    ) {
+      // If specific coordinates are provided, use them
+      mapRef.current.animateCamera({
+        center: {
+          latitude: latitude,
+          longitude: longitude,
+        },
+      });
+    }
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
   };
 
   const handleRouteSelect = async (routeId: number) => {
@@ -108,37 +139,6 @@ export default function Map() {
     setRouteCords([]);
     setIsTreeWalkButtonVisible(true);
     setIsRouteActive(false);
-  };
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  const animateToLocation = ({
-    latitude,
-    longitude,
-  }: animateLocationProps = {}) => {
-    // If no specific coordinates are provided, use currentLocation
-    if (!latitude && !longitude && currentLocation && mapRef.current) {
-      mapRef.current.animateCamera({
-        center: {
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-        },
-      });
-    } else if (
-      latitude !== undefined &&
-      longitude !== undefined &&
-      mapRef.current
-    ) {
-      // If specific coordinates are provided, use them
-      mapRef.current.animateCamera({
-        center: {
-          latitude: latitude,
-          longitude: longitude,
-        },
-      });
-    }
   };
 
   useEffect(() => {
