@@ -34,7 +34,8 @@ export default function Directory() {
         horizontal
         initialNumToRender={3}
         showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={true}
+        indicatorStyle="black"
         data={trees}
         renderItem={({ item }) => <TreeCard item={item} />}
         keyExtractor={(item) => item.id.toString()}
