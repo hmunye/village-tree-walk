@@ -74,10 +74,3 @@ export type RouteCoordinates = {
   created_at: string;
   updated_at: string;
 };
-
-export type TreesOnRoute = {
-  route_id: number;
-  tree_id: number;
-  created_at: string;
-  updated_at: string;
-};

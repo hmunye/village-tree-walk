@@ -83,7 +83,7 @@ export default function Map() {
   const handleRouteSelect = async (routeId: number) => {
     try {
       const routeCordsRows: RouteCoordinates[] = await db.getAllAsync(
-        "SELECT * FROM route_coordinates WHERE route_id = ?",
+        "SELECT * FROM map_route_coordinates WHERE route_id = ?",
         [routeId]
       );
       toggleModal();
@@ -144,8 +144,8 @@ export default function Map() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const treeRows = await db.getAllAsync("SELECT * FROM tree");
-        const routeRows = await db.getAllAsync("SELECT * FROM map_route");
+        const treeRows = await db.getAllAsync("SELECT * FROM trees");
+        const routeRows = await db.getAllAsync("SELECT * FROM map_routes");
 
         setTrees(treeRows as Tree[]);
         setRoutes(routeRows as MapRoute[]);
@@ -235,6 +235,26 @@ export default function Map() {
   if (!currentLocation) {
     return <GettingLocation />;
   }
+
+  const waypoints = [
+    43.2157498293752, -77.93641625945612, 43.215910606642865,
+    -77.93670660857263, 43.21603307120707, -77.93707908557067,
+    43.216134888250615, -77.93712726425933, 43.21634013445997,
+    -77.93766303550952, 43.216488204509176, -77.93810761164826,
+    43.216452042220546, -77.93809688281254, 43.2145510145356,
+    -77.93864931579384, 43.214600386501644, -77.93893860399209,
+    43.214438926680586, -77.93896423712359, 43.21374904807174,
+    -77.93916747125577, 43.214094627834974, -77.94213620026122,
+    43.216279850482515, -77.94148306216373, 43.215799770532385,
+    -77.94338692128933, 43.2158918406595, -77.94342537098656, 43.21640823141541,
+    -77.94370550450544, 43.21651631264591, -77.94371465919527,
+    43.216534993332964, -77.94361945042114, 43.21831530968133,
+    -77.94377775402057, 43.21828683284221, -77.94393601296684, 43.2181446935413,
+    -77.94394233831656, 43.2180054705533, -77.94405408036526, 43.21791221724206,
+    -77.94425053009607, 43.21772045645842, -77.94461639520478,
+    43.21745120229293, -77.94490295949099, 43.217436754474846,
+    -77.94500569008416,
+  ];
 
   return (
     <View style={styles.container}>
@@ -379,7 +399,7 @@ const styles = StyleSheet.create({
   },
   locationButton: {
     position: "absolute",
-    top: 160,
+    top: 240,
     right: 21,
     backgroundColor: colors.background,
     padding: 15,

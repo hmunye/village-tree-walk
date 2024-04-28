@@ -13,7 +13,7 @@ export default function Directory() {
     async function fetchData() {
       try {
         const trees = await db.getAllAsync(
-          "SELECT * FROM tree GROUP BY species"
+          "SELECT * FROM trees GROUP BY species"
         );
         setTrees(trees as Tree[]);
       } catch (error) {
