@@ -6,9 +6,19 @@ import { Skeleton } from "moti/skeleton";
 import React, { useState } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import CustomPressable from "./CustomPressable";
+import TreeDetails from "./TreeDetails";
 
 export default function TreeCard({ item }: { item: Tree }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handlePress = () => {
+    setIsModalVisible(true);
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   return (
     <View style={styles.container}>
@@ -27,7 +37,7 @@ export default function TreeCard({ item }: { item: Tree }) {
                 <Text style={styles.addressText}>{item.address}</Text>
               </View>
               <CustomPressable
-                onPress={() => console.log()}
+                onPress={handlePress}
                 buttonStyle={styles.cardButton}
               >
                 <Text style={styles.cardButtonText}>Learn More</Text>
@@ -36,6 +46,12 @@ export default function TreeCard({ item }: { item: Tree }) {
           </Skeleton>
         </MotiView>
       </Skeleton.Group>
+      <TreeDetails
+        tree={item}
+        modalVisible={isModalVisible}
+        setModalVisible={() => toggleModal()}
+        toggleModal={toggleModal}
+      />
     </View>
   );
 }
