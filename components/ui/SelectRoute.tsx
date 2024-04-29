@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   modalView: {
-    height: "65%",
-    width: "auto",
-    alignItems: "flex-start",
+    height: "68%",
+    width: "80%",
+    alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
     backgroundColor: colors.muted,
@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
   },
   closeModal: {
     padding: 10,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
     marginTop: 10,
-    marginLeft: 10,
+    marginLeft: -250,
   },
   swipeContainer: {
     flexDirection: "row",

@@ -22,7 +22,7 @@ import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 
 // Distance from user to closest tree in meters
-const DISTANCE_THRESHOLD_IN_METERS = 10;
+const DISTANCE_THRESHOLD_IN_METERS = 20_000;
 
 export default function Map() {
   const db = useSQLiteContext();

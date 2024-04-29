@@ -1,29 +1,41 @@
 import { TreeImages } from "@/assets/images";
 import { colors } from "@/styles";
 import { Tree } from "@/types/types";
-import React from "react";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import React, { useState } from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import CustomPressable from "./CustomPressable";
 
 export default function TreeCard({ item }: { item: Tree }) {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={TreeImages[item.species]}
-        style={styles.image}
-        imageStyle={{ borderRadius: 30 }}
-      >
-        <View style={styles.textContainer}>
-          <Text style={styles.speciesText}>{item.species}</Text>
-          <Text style={styles.addressText}>{item.address}</Text>
-        </View>
-        <CustomPressable
-          onPress={() => console.log()}
-          buttonStyle={styles.cardButton}
-        >
-          <Text style={styles.cardButtonText}>Learn More</Text>
-        </CustomPressable>
-      </ImageBackground>
+      <Skeleton.Group show={isLoading}>
+        <MotiView>
+          <Skeleton colorMode="light" radius={30}>
+            <ImageBackground
+              source={TreeImages[item.species]}
+              style={styles.image}
+              imageStyle={{ borderRadius: 30 }}
+              onLoad={() => setIsLoading(false)}
+              onError={() => setIsLoading(false)}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.speciesText}>{item.species}</Text>
+                <Text style={styles.addressText}>{item.address}</Text>
+              </View>
+              <CustomPressable
+                onPress={() => console.log()}
+                buttonStyle={styles.cardButton}
+              >
+                <Text style={styles.cardButtonText}>Learn More</Text>
+              </CustomPressable>
+            </ImageBackground>
+          </Skeleton>
+        </MotiView>
+      </Skeleton.Group>
     </View>
   );
 }
@@ -32,11 +44,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 10,
+    padding: 20,
   },
   image: {
-    width: 380,
-    height: 430,
+    width: 350,
+    height: 400,
     justifyContent: "center",
     borderRadius: 10,
   },

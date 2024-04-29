@@ -1,9 +1,10 @@
 import TreeCard from "@/components/ui/TreeCard";
+import WaveBackground from "@/components/ui/WaveBackground";
 import { colors } from "@/styles";
 import { Tree } from "@/types/types";
 import { useSQLiteContext } from "expo-sqlite/next";
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function Directory() {
   const db = useSQLiteContext();
@@ -26,7 +27,8 @@ export default function Directory() {
   }, [db]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <WaveBackground />
       <View style={styles.title}>
         <Text style={styles.text}>Tree Directory</Text>
       </View>
@@ -40,7 +42,7 @@ export default function Directory() {
         renderItem={({ item }) => <TreeCard item={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -53,12 +55,12 @@ const styles = StyleSheet.create({
   },
   title: {
     position: "absolute",
-    top: 100,
+    top: 110,
     left: 50,
   },
   text: {
     fontSize: 52,
-    color: colors.primary,
+    color: colors.background,
     fontFamily: "Barlow-Bold",
   },
 });

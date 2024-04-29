@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 20,
     padding: 20,
-    backgroundColor: "#EEEFFF",
+    backgroundColor: colors.background,
     borderWidth: 2,
     borderColor: colors.foreground,
   },
@@ -68,11 +68,10 @@ const styles = StyleSheet.create({
   },
   cardItemDescription: {
     fontSize: 16,
-    fontFamily: "Barlow-Medium",
+    fontFamily: "Barlow-SemiBold",
     color: colors.foreground,
     textAlign: "center",
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: 20,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: colors.foreground,

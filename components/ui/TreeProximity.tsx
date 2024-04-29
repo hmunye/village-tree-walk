@@ -2,10 +2,17 @@ import { TreeImages } from "@/assets/images";
 import { colors } from "@/styles";
 import { Tree } from "@/types/types";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import { MotiView } from "moti";
+import { Skeleton } from "moti/skeleton";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-// TODO: Add skeleton for image when loading
 export default function TreeProximity({
   closestTree,
   closestDistance,
@@ -14,11 +21,11 @@ export default function TreeProximity({
   closestDistance: number;
 }) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   const snapPoints = useMemo(() => ["15%", "50%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
-    // TODO: Make use of this
     console.info("handleSheetChanges: ", index);
   }, []);
 
@@ -39,9 +46,21 @@ export default function TreeProximity({
           <Text style={styles.cardTitleText}>Tree Nearby!</Text>
           <Text style={styles.cardItemText}>{closestTree.species}</Text>
           <View style={styles.imageContainer}>
+            {isImageLoading ? (
+              <MotiView>
+                <Skeleton
+                  height={250}
+                  width={300}
+                  radius={20}
+                  colorMode="light"
+                />
+              </MotiView>
+            ) : null}
             <Image
               source={TreeImages[closestTree.species]}
               style={{ width: 300, height: 250, resizeMode: "cover" }}
+              onLoad={() => setIsImageLoading(false)}
+              onError={() => setIsImageLoading(false)}
             />
           </View>
         </View>
