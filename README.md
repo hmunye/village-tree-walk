@@ -1,4 +1,4 @@
-# Village Tree Walk (WIP)
+# Village Tree Walk (Prototype)
 
 ## Overview
 
